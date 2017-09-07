@@ -1,10 +1,12 @@
 package com.zhuhao.highlighttextview;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.util.AttributeSet;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,15 +62,29 @@ public class HLTextView extends android.support.v7.widget.AppCompatTextView {
             }
         }
 
-        operateHighlight(text);
+        operateHighlight(operateNbsp(text));
 
     }
 
-    
+    public String operateNbsp(String text){
+        Log.e("nbsp",text);
+
+        StringBuilder builder=new StringBuilder(text);
+        for (HighlightText highlightText:indexArrays) {
+            String sub=text.substring(highlightText.start,highlightText.end);
+            Log.e("nbsp",sub);
+            String sub1=sub.replace(" ","\u00A0");
+
+            Log.e("nbsp",sub1);
+            text=text.replace(sub,sub1);
+        }
+        Log.e("nbsp",text);
+        return text;
+    }
     public void operateHighlight(String text){
         SpannableString ss=new SpannableString(text);
         for (HighlightText highlightText:indexArrays) {
-            ss.setSpan(new ForegroundColorSpan(highlightColor),highlightText.start,highlightText.end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            ss.setSpan(new ForegroundColorSpan(Color.BLUE),highlightText.start,highlightText.end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
         this.setText(ss);
     }
