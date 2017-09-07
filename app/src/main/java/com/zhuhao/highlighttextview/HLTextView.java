@@ -1,9 +1,9 @@
 package com.zhuhao.highlighttextview;
 
 import android.content.Context;
-import android.graphics.Canvas;
-import android.text.Editable;
-import android.text.TextWatcher;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
 import android.util.AttributeSet;
 
 import java.util.ArrayList;
@@ -22,7 +22,7 @@ import java.util.regex.Pattern;
 public class HLTextView extends android.support.v7.widget.AppCompatTextView {
 
     private int defaultColor = 0xffffff;
-    private int HighlightColor = 0x123456;
+    private int highlightColor = 0x123456;
     private ArrayList<HighlightText> indexArrays = new ArrayList<>();
 
     public HLTextView(Context context) {
@@ -31,22 +31,7 @@ public class HLTextView extends android.support.v7.widget.AppCompatTextView {
 
     public HLTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        this.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-
-            }
-        });
 
     }
 
@@ -55,16 +40,14 @@ public class HLTextView extends android.support.v7.widget.AppCompatTextView {
     }
 
     public void setHighlightColor(int highlightColor) {
-        HighlightColor = highlightColor;
+        this.highlightColor = highlightColor;
     }
 
-    public void draw(Canvas canvas){
-        
-    }
+
 
     public void setDisplayText(String text, List<String> highlighted) {
+        SpannableString ss=new SpannableString(text);
 
-        int start = 0, end;
         for (int i = 0; i < highlighted.size(); i++) {
             Pattern pattern = Pattern.compile(highlighted.get(i));
             Matcher m = pattern.matcher(text);
@@ -75,14 +58,19 @@ public class HLTextView extends android.support.v7.widget.AppCompatTextView {
                 hText.end = m.end();
                 indexArrays.add(hText);
             }
-
-            end = text.indexOf(highlighted.get(i), start);
-            if (end != -1) {
-
-                start = end + 1;
-            }
         }
 
+        operateHighlight(text);
+
+    }
+
+    
+    public void operateHighlight(String text){
+        SpannableString ss=new SpannableString(text);
+        for (HighlightText highlightText:indexArrays) {
+            ss.setSpan(new ForegroundColorSpan(highlightColor),highlightText.start,highlightText.end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
+        this.setText(ss);
     }
 
     class HighlightText {
