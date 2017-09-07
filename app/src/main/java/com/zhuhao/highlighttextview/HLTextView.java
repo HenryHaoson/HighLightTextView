@@ -18,7 +18,7 @@ import java.util.regex.Pattern;
  * Date : 7/9/2017
  *
  * @Last Modified Time :7/9/2017
- * Description :
+ * Description :通过转换空格符non-breaking space来实现同一词组不换行。
  */
 
 public class HLTextView extends android.support.v7.widget.AppCompatTextView {
@@ -66,6 +66,11 @@ public class HLTextView extends android.support.v7.widget.AppCompatTextView {
 
     }
 
+    /**
+     * 操作text,替换词组中的空格为\u00A0
+     * @param text
+     * @return 返回处理好的text
+     */
     public String operateNbsp(String text){
         Log.e("nbsp",text);
 
@@ -81,6 +86,11 @@ public class HLTextView extends android.support.v7.widget.AppCompatTextView {
         Log.e("nbsp",text);
         return text;
     }
+
+    /**
+     * 设置词组高亮，然后setText。
+     * @param text
+     */
     public void operateHighlight(String text){
         SpannableString ss=new SpannableString(text);
         for (HighlightText highlightText:indexArrays) {
